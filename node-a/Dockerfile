@@ -1,13 +1,21 @@
 FROM ubuntu:20.04
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
+    curl \
+    iptables \
+    nano \
     python3 \
     python3-pip \
+    python3-socksipychain \
  && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install \
-    httpx
+    daemonize \
+    httpx \
+    loguru
 
 ADD client.py client.py
+ADD entrypoint.sh entrypoint.sh
+ADD redirector.py redirector.py
 
-ENTRYPOINT [ "./client.py" ]
+ENTRYPOINT [ "./entrypoint.sh" ]
