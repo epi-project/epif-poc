@@ -1,0 +1,8 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && apt-get install
+sudo docker build -t epi-poc-demo/node-a node-a
+#ADD entrypoint.sh entrypoint.sh
+
+#ENTRYPOINT [ "./entrypoint.sh" ]
+
