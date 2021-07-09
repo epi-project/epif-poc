@@ -1,0 +1,25 @@
+version: "3.5"
+
+services:
+    proxy:
+        image: onnovalkering/socksx
+        ports: 
+            - "127.0.0.1:1080:1080"
+        command: "-c socks6://encrypt:1080 -c socks6://decrypt:1080"
+    
+    encrypt:
+        build:
+            context: .
+            dockerfile: Dockerfile.chacha20
+        command: "chacha20"
+        environment: 
+            "CHACHA20_KEY": "12345678901234567890123456789012"
+    
+    decrypt:
+        build:
+            context: .
+            dockerfile: Dockerfile.chacha20
+        command: "chacha20"
+        environment: 
+            "CHACHA20_KEY": "12345678901234567890123456789012"
+

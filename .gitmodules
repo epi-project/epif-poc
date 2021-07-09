@@ -1,0 +1,3 @@
+[submodule "socks-chaining/socksx"]
+	path = socks-chaining/socksx
+	url = https://github.com/onnovalkering/socksx.git
