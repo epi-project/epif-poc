@@ -1,0 +1,26 @@
+version: '2.2'
+services:
+  server:
+    image: d-server
+    container_name: d-server
+    build:
+      context: .
+    networks:
+      my-net:
+        ipv4_address: 172.16.238.13
+    ports:
+      - "5000:5000"
+#  client:
+#     image: client
+#     container_name: client
+#     build:
+#       context: ./client
+#     networks:
+#       net:
+#         ipv4_address: 172.16.238.14
+
+networks:
+  my-net:
+# use the bridge driver, but enable IPv6
+    external: true
+    name: bf-net

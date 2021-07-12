@@ -1,0 +1,76 @@
+version: '2.2'
+services:
+  reverse-proxy:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx-proxy/default.conf:/etc/nginx/nginx.conf
+    networks:
+      net:
+        ipv4_address: 172.16.238.10
+    ports:
+      - 8080:8080
+      - 8081:8081
+    depends_on:
+      - firewall
+      - encryptionserver
+  firewall:
+    image: firewall
+    container_name: firewall
+    tty: true
+    privileged: true
+    build:
+      context: ./firewall
+    networks:
+      net:
+        ipv4_address: 172.16.238.11
+    ports:
+      - "1234:1234"
+  encryptionserver:
+     image: encryptionserver
+     privileged: true
+     container_name: encryptionserver
+#     volumes:
+#      - ./encryptionserver/handleServer.py:/etc/handleServer.py
+#      - ./encryptionserver/relay.py:/etc/relay.py
+     build:
+       context: ./encryptionserver
+#     command: ["172.16.238.13:5000"]  
+      #dockerfile: Dockerfile
+#       args:
+#         SERVER_IP: "172.16.238.13:5000"
+     networks:
+       net:
+         ipv4_address: 172.16.238.12
+     ports:
+       - "1235:1235"
+#  server:
+#     image: server
+#     container_name: server
+#     build:
+#       context: ./server
+#     networks:
+#       net:
+#         ipv4_address: 172.16.238.13
+#     ports:
+#       - "5000:5000"
+#  client:
+#     image: client
+#     container_name: client
+#     build:
+#       context: ./client
+#     networks:
+#       net:
+#         ipv4_address: 172.16.238.14
+
+networks:
+  net:
+# use the bridge driver, but enable IPv6
+# external: true
+    name: bf-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1
+
