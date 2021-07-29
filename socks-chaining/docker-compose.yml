@@ -5,7 +5,7 @@ services:
         image: onnovalkering/socksx
         ports: 
             - "127.0.0.1:1080:1080"
-        command: "-c socks6://encrypt:1080 -c socks6://counter:1080 -c socks6://decrypt:1080"
+        command: "-c socks6://encrypt:1080 -c socks6://whitelist:1080 -c socks6://decrypt:1080"
         networks:
             net:
                 ipv4_address: 172.16.238.2     
@@ -25,6 +25,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.whitelist
+        command: "--host 0.0.0.0"
         networks:
             net:
                 ipv4_address: 172.16.238.4                 
