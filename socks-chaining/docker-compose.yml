@@ -5,7 +5,10 @@ services:
         image: onnovalkering/socksx
         ports: 
             - "127.0.0.1:1080:1080"
-        command: "-c socks6://encrypt:1080 -c socks6://decrypt:1080"
+        command: "-c socks6://encrypt:1080 -c socks6://counter:1080 -c socks6://decrypt:1080"
+        networks:
+            net:
+                ipv4_address: 172.16.238.2     
     
     encrypt:
         build:
@@ -14,6 +17,17 @@ services:
         command: "chacha20"
         environment: 
             "CHACHA20_KEY": "12345678901234567890123456789012"
+        networks:
+            net:
+                ipv4_address: 172.16.238.3
+
+    whitelist:
+        build:
+            context: .
+            dockerfile: Dockerfile.whitelist
+        networks:
+            net:
+                ipv4_address: 172.16.238.4                 
     
     decrypt:
         build:
@@ -22,4 +36,22 @@ services:
         command: "chacha20"
         environment: 
             "CHACHA20_KEY": "12345678901234567890123456789012"
+        networks:
+            net:
+                ipv4_address: 172.16.238.5           
 
+    netcat:
+        image: busybox
+        command: "nc -l -p 12345"
+        restart: always
+        networks:
+            net:
+                ipv4_address: 172.16.238.6     
+
+
+networks:
+    net:
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.16.238.0/24"
